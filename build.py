@@ -27,7 +27,8 @@ IMG_DIR = os.path.join(ROOT, "images")
 
 # Photos optionnelles : si le fichier existe dans ./images, il est utilisé.
 PHOTOS = {
-    "moi": "images/moi.jpg",                                   # ta tête (carré)
+    "moi": "images/moi.jpg",                                   # ta photo (portrait 4:5)
+    "moi-avatar": "images/moi-avatar.jpg",                     # petite version carrée (articles)
     "meilleures-chaussures-trail": "images/chaussures.jpg",    # couverture article (16:8)
     "meilleure-montre-gps-trail": "images/montres.jpg",
 }
@@ -245,10 +246,14 @@ def fmt_date(iso):
     return f"{int(d)} {months[int(m) - 1]} {y}"
 
 
-def face(cls="face"):
-    p = photo("moi")
-    inner = f'<img src="{p}" alt="{AUTHOR}" width="120" height="120">' if p else AUTHOR[0]
-    return f'<div class="{cls}" aria-hidden="{"false" if p else "true"}">{inner}</div>'
+def face(big=False):
+    """Photo de l'auteur : grande version (accueil, Qui je suis) ou avatar rond (articles)."""
+    p = photo("moi") if big else (photo("moi-avatar") or photo("moi"))
+    cls = "face face-big" if big else "face"
+    if p:
+        size = 'width="640" height="800"' if big else 'width="160" height="160"'
+        return f'<div class="{cls}"><img src="{p}" alt="{AUTHOR} en course en montagne" {size} loading="lazy"></div>'
+    return f'<div class="{cls}" aria-hidden="true">{AUTHOR[0]}</div>'
 
 
 def post_card(a):
@@ -320,7 +325,7 @@ def build_home():
 
 <section class="section wrap">
   <div class="hello">
-    {face()}
+    {face(big=True)}
     <div>
       <h2 class="serif">Salut, moi c'est {AUTHOR}.</h2>
       <p>Je cours en montagne dès que je peux. Ce blog, c'est ce que j'aurais aimé lire avant d'acheter mon matos : des avis francs, classés selon le terrain, avec les chiffres qui comptent. Bientôt, tu y trouveras aussi mes récits de course.</p>
@@ -393,7 +398,7 @@ def simple_page(path, title, desc, h1, inner, current="", robots=None):
         h = h.replace('content="index, follow, max-image-preview:large"', f'content="{robots}"')
     if path == "a-propos.html":
         body = f"""<div class="page-top"><div class="wrap">{px.crumbs("Qui je suis")}
-  <div class="about-head">{face()}<div><h1 class="serif">{h1}</h1><p class="lede">{esc(AUTHOR_BIO)}</p></div></div>
+  <div class="about-head">{face(big=True)}<div><h1 class="serif">{h1}</h1><p class="lede">{esc(AUTHOR_BIO)}</p></div></div>
 </div></div>
 <div class="wrap page" style="padding-top:8px"><div class="prose">{inner}</div></div>"""
     else:

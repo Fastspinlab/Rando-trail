@@ -265,6 +265,14 @@ a.plan-card:hover { border-color: var(--ink); }
 .hello { margin-top: 0; }
 .soon-card { align-self: start; }
 .about-head { margin-top: 26px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
-.about-head > div { min-width: 0; flex: 1 1 20rem; }
+.about-head > div:not(.face) { min-width: 0; flex: 1 1 20rem; }
+.about-head .face-big { flex: none; }
 .about-head .face { background: var(--ink); color: var(--yellow); font-family: var(--font-loud); font-weight: 800; }
 .about-head h1 { font-size: clamp(2.2rem, 1.4rem + 3vw, 3.6rem); }
+
+/* Photo de l'auteur */
+.face-big { width: clamp(180px, 22vw, 260px); height: auto; aspect-ratio: 4 / 5; border-radius: var(--r-lg); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); transform: rotate(-2deg); background: var(--yellow); }
+.hello .face-big { border-color: var(--yellow); box-shadow: 6px 6px 0 var(--yellow); }
+.about-head .face-big { background: var(--white); }
+.face img { display: block; }
+@media (max-width: 640px) { .face-big { width: min(70%, 240px); } }

@@ -19,7 +19,7 @@ Ne modifie **jamais** les fichiers de `dist/` : à chaque mise en ligne, GitHub 
 - `style.css` : le design.
 
 ## Tes photos
-Dépose `images/moi.jpg` (carré), `images/chaussures.jpg` et `images/montres.jpg` (format 16:8), puis relance `python3 build.py` : elles remplacent les blocs de couleur.
+Dépose `images/moi.jpg` (portrait 4:5) et `images/moi-avatar.jpg` (petit carré pour les articles), `images/chaussures.jpg` et `images/montres.jpg` (format 16:8), puis relance `python3 build.py` : elles remplacent les blocs de couleur.
 
 ## Ajouter un article
 1. Crée `content/mon-article.html` (fragment : `<h2 id="...">` pour le sommaire auto, `{{FAQ}}` pour la FAQ).
