@@ -11,11 +11,17 @@ SITE_URL = "https://rando-trail.fr"
 SITE_NAME = "Rando Trail"
 TAGLINE = "Trail & rando"
 AUTHOR = "Nicolas"
-AUTHOR_BIO = "Traileur. Je cours en montagne dès que je peux et j'écris ici les guides que j'aurais aimé lire avant d'acheter mon matos."
 LANG = "fr"
 TODAY = "2026-09-30"
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+
+# Page « Qui je suis » : tout se modifie dans content/a-propos.html
+with open(os.path.join(ROOT, "content", "a-propos.html"), encoding="utf-8") as _f:
+    _about = re.sub(r"<!--.*?-->", "", _f.read(), flags=re.S)
+_bio = re.search(r'<p class="bio">(.*?)</p>', _about, flags=re.S)
+AUTHOR_BIO = html.unescape(re.sub(r"<[^>]+>", "", _bio.group(1)).strip()) if _bio else ""
+ABOUT = (_about[:_bio.start()] + _about[_bio.end():]).strip() if _bio else _about.strip()
 DIST = os.path.join(ROOT, "dist")
 IMG_DIR = os.path.join(ROOT, "images")
 
@@ -395,18 +401,6 @@ def simple_page(path, title, desc, h1, inner, current="", robots=None):
     return page(h, body, current)
 
 
-ABOUT = f"""<h2>Pourquoi Rando Trail ?</h2>
-<p>Parce que je passe de l'un à l'autre toute l'année : du trail à fond sur les sentiers, de la rando quand je prends le temps. J'ai lancé ce site parce que la plupart des comparatifs classent le matos sans dire pour quel terrain ni pour quel coureur. Ici, chaque conseil part de là : où tu cours, combien de temps, avec quel budget.</p>
-<h2>Comment je travaille</h2>
-<ul>
-  <li>Je pars des fiches techniques, des tests publiés et des retours de coureurs.</li>
-  <li>Quand j'ai couru avec un modèle, je le dis.</li>
-  <li>J'explique les critères (drop, stack, autonomie, accroche) pour que tu puisses juger toi-même.</li>
-  <li>Je mets les guides à jour à chaque nouvelle génération.</li>
-</ul>
-<h2>Les liens d'affiliation</h2>
-<p>Certains liens peuvent être affiliés : si tu achètes via ces liens, {SITE_NAME} touche une petite commission, sans surcoût pour toi. Ça ne change rien à mes avis.</p>"""
-
 LEGAL = f"""<h2>Éditeur du site</h2>
 <p>{SITE_NAME} est édité par : [Nom et prénom] · [Adresse] · Contact : [adresse e-mail].<br>Directeur de la publication : [Nom].</p>
 <h2>Hébergement</h2>
@@ -428,6 +422,9 @@ def og_image(path, kicker, title):
     img = Image.new("RGB", (W, H), "#ffd84d")
     d = ImageDraw.Draw(img)
     bold = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+    if not os.path.exists(bold):  # serveur sans police DejaVu : police par défaut de Pillow
+        _orig = ImageFont.truetype
+        ImageFont.truetype = lambda _p, size: ImageFont.load_default(size)
     fb = ImageFont.truetype(bold, 70)
     d.rounded_rectangle([80, 80, 130, 96], 3, fill="#ffffff", outline="#121613", width=3)
     d.rounded_rectangle([80, 102, 130, 118], 3, fill="#121613")

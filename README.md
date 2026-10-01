@@ -11,6 +11,13 @@ Blog statique (HTML/CSS pur, zéro JavaScript) optimisé SEO, prêt pour GitHub 
 - Complète `mentions-legales.html` (obligatoire en France : éditeur, contact).
 - Déclare le site dans **Google Search Console** et soumets `sitemap.xml`.
 
+## ⚠️ Où modifier le contenu
+Ne modifie **jamais** les fichiers de `dist/` : à chaque mise en ligne, GitHub relance `build.py`, qui efface `dist/` et le regénère à partir des sources. Modifie plutôt :
+- `content/a-propos.html` : la page « Qui je suis » (le paragraphe `class="bio"` sert aussi d'encadré auteur dans les articles) ;
+- `content/chaussures.html`, `content/montres.html` : le texte des articles ;
+- `build.py` : titres, descriptions, FAQ, listes d'articles, de plans et de récits ;
+- `style.css` : le design.
+
 ## Tes photos
 Dépose `images/moi.jpg` (carré), `images/chaussures.jpg` et `images/montres.jpg` (format 16:8), puis relance `python3 build.py` : elles remplacent les blocs de couleur.
 
